@@ -32,20 +32,20 @@ update : Msg -> Model -> Model
 update msg model =
     case msg of
         Change name ->
-            {modem | name = name}
+            {model | name = name}
 
 --VIEW
 
 view : Model -> Html Msg
 view model =
     div [] [
-        input [ onInput Change ] []
-        div [] [ text guessMyName model.name ]
+        input [ onInput Change ] [],
+        div [] [ text <| guessMyName <| model.name ]
     ]
 
 --GUESS MY NAME
 guessMyName: String -> String
-guessMyName name ->
+guessMyName name =
     case name of
         "Ioannis" ->
             "Correct!"
