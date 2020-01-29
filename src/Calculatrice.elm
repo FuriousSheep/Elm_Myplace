@@ -14,7 +14,7 @@ main =
 
 --MODEL
 type alias Model = {
-    result : Maybe Float,
+    result : Float,
     operand1 : Maybe Float,
     operand2 : Maybe Float,
     operator : String
@@ -24,7 +24,7 @@ type alias Model = {
 --INIT
 init: Model
 init =
-  Model Nothing Nothing Nothing ""
+  Model 0 Nothing Nothing ""
 
 
 --UPDATE
@@ -37,6 +37,9 @@ type Msg = Add
     
 update : Msg -> Model -> Model
 update msg model =
+    let operand1 = Maybe.withDefault 0 model.operand1
+        operand2 = Maybe.withDefault 0 model.operand2
+    in
     case msg of
         ChangeOp1 newNumber ->
             { model | operand1 = String.toFloat <| newNumber }
@@ -45,16 +48,16 @@ update msg model =
             { model | operand2 = String.toFloat <| newNumber }
 
         Add ->
-            { model | result = Just ((Maybe.withDefault 0 model.operand1) + (Maybe.withDefault 0 model.operand2)) }
+            { model | result =  operand1 + operand2 }
 
         Sub ->
-            { model | result = Just ((Maybe.withDefault 0 model.operand1) - (Maybe.withDefault 0 model.operand2)) }
+            { model | result =  operand1 - operand2 }
         
         Mul ->
-            { model | result = Just ((Maybe.withDefault 0 model.operand1) * (Maybe.withDefault 0 model.operand2))}
+            { model | result =  operand1 * operand2 }
         
         Div ->
-            { model | result = Just ((Maybe.withDefault 0 model.operand1) / (Maybe.withDefault 0 model.operand2)) }
+            { model | result =  operand1 / operand2 }
 
 
 --VIEW
@@ -68,7 +71,7 @@ view model =
             input [ 
                 value (String.fromFloat <| Maybe.withDefault 0 model.operand2), 
                 onInput ChangeOp2 ] [], 
-            div [] [ text ("Result : " ++ (String.fromFloat <| Maybe.withDefault 0 model.result)) ] 
+            div [] [ text ("Result : " ++ (String.fromFloat <| model.result )) ] 
         ]
         , div [] [ 
             button [ onClick Add] [ text "+"],
@@ -77,3 +80,5 @@ view model =
             button [ onClick Div] [ text "/"]
         ]
     ]
+
+--
