@@ -15,8 +15,8 @@ main =
 --MODEL
 type alias Model = {
     result : Float,
-    operand1 : Maybe Float,
-    operand2 : Maybe Float,
+    operand1 : Float,
+    operand2 : Float,
     operator : String
     }
 
@@ -24,7 +24,7 @@ type alias Model = {
 --INIT
 init: Model
 init =
-  Model 0 Nothing Nothing ""
+  Model 0 0 0 ""
 
 
 --UPDATE
@@ -37,15 +37,15 @@ type Msg = Add
     
 update : Msg -> Model -> Model
 update msg model =
-    let operand1 = Maybe.withDefault 0 model.operand1
-        operand2 = Maybe.withDefault 0 model.operand2
+    let operand1 = model.operand1
+        operand2 = model.operand2
     in
     case msg of
         ChangeOp1 newNumber ->
-            { model | operand1 = String.toFloat <| newNumber }
+            { model | operand1 = Maybe.withDefault 0 <| String.toFloat <| newNumber }
 
         ChangeOp2 newNumber ->
-            { model | operand2 = String.toFloat <| newNumber }
+            { model | operand2 = Maybe.withDefault 0 <| String.toFloat <| newNumber }
 
         Add ->
             { model | result =  operand1 + operand2 }
@@ -66,10 +66,10 @@ view model =
     div [] [ 
         div [] [ 
             input [ 
-                value (String.fromFloat <| Maybe.withDefault 0 model.operand1), 
+                value (String.fromFloat model.operand1), 
                 onInput ChangeOp1 ] [], 
             input [ 
-                value (String.fromFloat <| Maybe.withDefault 0 model.operand2), 
+                value (String.fromFloat model.operand2), 
                 onInput ChangeOp2 ] [], 
             div [] [ text ("Result : " ++ (String.fromFloat <| model.result )) ] 
         ]
