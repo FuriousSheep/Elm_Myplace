@@ -53,5 +53,9 @@ guessMyName name =
             "Close, but use proper capitalisation."
         "loannis" ->
             "I hate you, your friends hate you, your mother hates you, your dog hates you and you will die alone and unloved. You swine."
+        "ioanis" ->
+            "Missed an N! Also, capitalise proper names =)"
+        "Ioanis" ->
+            "Missed an N!"
         _ ->
             "Nope. Try again!"
