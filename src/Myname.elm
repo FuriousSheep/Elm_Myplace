@@ -40,5 +40,18 @@ view : Model -> Html Msg
 view model =
     div [] [
         input [ onInput Change ] []
-        guessMyName model.name
+        div [] [ text guessMyName model.name ]
     ]
+
+--GUESS MY NAME
+guessMyName: String -> String
+guessMyName name ->
+    case name of
+        "Ioannis" ->
+            "Correct!"
+        "ioannis" ->
+            "Close, but use proper capitalisation."
+        "loannis" ->
+            "I hate you, your friends hate you, your mother hates you, your dog hates you and you will die alone and unloved. You swine."
+        _ ->
+            "Nope. Try again!"
