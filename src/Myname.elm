@@ -17,7 +17,7 @@ main =
 
 --MODEL
 type alias Model =
-    { input : String
+    { name : String
     }
 
 init: Model
@@ -26,7 +26,19 @@ init =
 
 --UPDATE
 type Msg
-    = Change
+    = Change String
 
+update : Msg -> Model -> Model
+update msg model =
+    case msg of
+        Change name ->
+            {modem | name = name}
 
 --VIEW
+
+view : Model -> Html Msg
+view model =
+    div [] [
+        input [ onInput Change ] []
+        guessMyName model.name
+    ]
