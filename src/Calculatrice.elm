@@ -19,6 +19,8 @@ type alias Model = {
     operand2 : Maybe Float,
     operator : String
     }
+
+
 --INIT
 init: Model
 init =
