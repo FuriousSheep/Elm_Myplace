@@ -24,7 +24,7 @@ type Selected = Phone | Email
 
 type alias Model =
     { email : Maybe String
-    , phone : Maybe Int
+    , phone : Maybe String
     , selected : Selected
     }
 
@@ -52,7 +52,7 @@ update msg model =
             ({ model | email = Just email }, Cmd.none)
 
         ChangePhone phone ->
-            ({ model | phone = String.toInt phone }, Cmd.none)
+            ({ model | phone = Just phone }, Cmd.none)
                 
         Select selected ->
             ({ model | selected = selected }, Cmd.none)
@@ -66,15 +66,15 @@ view : Model -> Html Msg
 view model =
     div [] [ 
         select [] [
-            option [ onClick (Select Phone) ] [ text "Phone Number" ],
-            option [ onClick (Select Email) ] [ text "Email" ]
+            option [ onClick (Select Email) ] [ text "Email" ],
+            option [ onClick (Select Phone) ] [ text "Phone" ]
         ],
         shownInput model,
         button [] [text "Send"],
         div [] [
             p [] [text "Model = {" ],
-            p [] [text ("email : " ++ (Maybe.withDefault "empty" model.email)) ],
-            p [] [text ("phone : " ++ ( String.fromInt <| Maybe.withDefault 0 <| model.phone )) ],
+            p [] [text ("email : " ++ ( Maybe.withDefault "empty" model.email)) ],
+            p [] [text ("phone : " ++ ( Maybe.withDefault "empty" model.phone )) ],
             p [] [text ("selected :" ++ ( showSelected model.selected ))],
             p [] [text "}"]
         ]
@@ -92,8 +92,7 @@ shownInput model =
         Phone ->
             input [onInput ChangePhone
                 , value (model.phone
-                    |> Maybe.withDefault 0
-                    |> String.fromInt
+                    |> Maybe.withDefault ""
                 )] []
                 
 
