@@ -18,10 +18,13 @@ main =
 
 
 --INIT
-type alias Model = 
+
+
+type alias User = 
     { name : String
     , age : Int }
 
+type alias Model = User
 
 init: () -> ( Model, Cmd Msg )
 init _ = 
@@ -31,6 +34,7 @@ init _ =
 --UPDATE
 type Msg = Start
     | UserClickedGetUser
+--    | ReceivedUserFromServer
 
 
 update : Msg -> Model -> (Model, Cmd Msg)
@@ -40,6 +44,10 @@ update msg model =
             ( {model | name = "start"} , Cmd.none)
         UserClickedGetUser ->
             ( {model | name = "click"} , getUser)
+--        ReceivedUserFromServer (Ok user) ->
+--            ( {}, Cmd.none)
+--        ReceivedUserFromServer (Ok Err error) ->
+--            ( {} Cmd.none)
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
@@ -58,3 +66,11 @@ view model =
 getUser : Cmd Msg
 getUser =
     Cmd.none
+--  Process.sleep 2000
+--    |> Task.perform (\_ ->
+--      ReceivedUserFromServer (Ok fakeUser)
+--    )
+
+fakeUser : User
+fakeUser =
+  { name = "Fake", age  = 42 }
