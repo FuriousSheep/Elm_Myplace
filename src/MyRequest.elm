@@ -3,73 +3,75 @@ module MyRequest exposing (..)
 import Browser
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import Html.Events exposing (onInput, onClick)
+import Html.Events exposing (onClick)
+import Maybe
+import Result
 import Process
 import Task
 
+
 --MAIN
-main : Program () Model Msg
-main =
-    Browser.sandbox
-        { init = init
-        , view = view
-        , update = update
-        }
- 
+main = 
+    Browser.element { init = init
+                    , subscriptions = subscriptions
+                    , update = update
+                    , view = view
+    }
+
 
 --INIT
-type alias Model error =
-    ({ statusText : String
-    }, Cmd Msg error User)
 
 
-init : Model
-init =
-    ({ statusText = "Ready"
-    }, Cmd.none )
+type alias User = 
+    { name : String
+    , age : Int }
+
+type alias Model = User
+
+init: () -> ( Model, Cmd Msg )
+init _ = 
+    ( { name = "test", age = 13} , Cmd.none )
 
 
 --UPDATE
-type Msg error
-    = None
-    | DoRequest
-    | ReceivedUserFromServer Result error User
+type Msg = Start
+    | UserClickedGetUser
+    | ReceivedUserFromServer (Result String User )
 
-update : Msg -> Model -> Model
+
+update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
-    let (record, command) = model
-    in
     case msg of
-        None ->
-            ({ record | statusText = "Ready" }, Cmd.none)
-        DoRequest ->
-            ({ record | statusText = "Doing Request" }, pretendRequest)
-        ReceivedUserFromServer user ->
-            ({ record | statusText = "Found User" ++ user.name }, pretendRequest)
+        Start ->
+            ( { model | name = "Start! No Request made"} , Cmd.none )
+        UserClickedGetUser ->
+            ( { model | name = "\"Loading\""} , getUser )
+        ReceivedUserFromServer (Ok user) ->
+            ( user, Cmd.none )
+        ReceivedUserFromServer (Err error) ->
+            ( { model | name = "Error! User not found"}, Cmd.none )
+
+subscriptions : Model -> Sub Msg
+subscriptions model =
+    Sub.none
 
 --VIEW
 view : Model -> Html Msg
 view model =
-    let (record, command) = model
-    in
-    div [] [ button [onClick DoRequest] [ text "doRequest" ]
-           , text record.statusText
-           ]
 
---pretendRequest
-pretendRequest : Cmd Msg
-pretendRequest = 
-    Process.sleep 2000 
-        |> Task.perform (\_ -> 
-            ReceivedUserFromServer ( Ok fakeUser )
-        )
+    div [] [
+        button [ onClick UserClickedGetUser ] [ text "Get the user" ],
+        div [] [ text model.name]
+    ]
 
-
-type alias User =
-    { name: String
-    , age: Int
-    }
+--GETUSER
+getUser : Cmd Msg
+getUser =
+  Process.sleep 2000
+    |> Task.perform (\_ ->
+      ReceivedUserFromServer (Ok fakeUser)
+    )
 
 fakeUser : User
-fakeUser = 
-    User 28 "Ioannis"
+fakeUser =
+  { name = "Fake", age  = 42 }
