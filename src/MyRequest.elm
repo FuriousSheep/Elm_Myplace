@@ -18,9 +18,9 @@ main =
  
 
 --INIT
-type alias Model error =
+type alias Model =
     ({ statusText : String
-    }, Cmd Msg error User)
+    }, Cmd Msg)
 
 
 init : Model
@@ -30,11 +30,11 @@ init =
 
 
 --UPDATE
-type Msg error
+type Msg
     = None
     | DoRequest
-    | ReceivedUserFromServer Result error User
-
+    | ReceivedUserFromServer Result User
+    
 update : Msg -> Model -> Model
 update msg model =
     let (record, command) = model
@@ -44,9 +44,12 @@ update msg model =
             ({ record | statusText = "Ready" }, Cmd.none)
         DoRequest ->
             ({ record | statusText = "Doing Request" }, pretendRequest)
-        ReceivedUserFromServer user ->
-            ({ record | statusText = "Found User" ++ user.name }, pretendRequest)
+        ReceivedUserFromServer ( Ok User )->
+            ({ record | statusText = "User Found!" }, pretendRequest)
+        ReceivedUserFromServer ( Err User )->
+            ({ record | statusText = "User Missed!" }, pretendRequest)
 
+        
 --VIEW
 view : Model -> Html Msg
 view model =
