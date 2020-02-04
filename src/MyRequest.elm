@@ -39,7 +39,7 @@ update msg model =
         Start ->
             ( {model | name = "start"} , Cmd.none)
         UserClickedGetUser ->
-            ( {model | name = "click"} , Cmd.none)
+            ( {model | name = "click"} , getUser)
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
@@ -53,3 +53,8 @@ view model =
         button [ onClick UserClickedGetUser ] [ text "Get the user" ],
         div [] [ text model.name]
     ]
+
+--GETUSER
+getUser : Cmd Msg
+getUser =
+    Cmd.none
