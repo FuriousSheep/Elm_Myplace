@@ -10,8 +10,9 @@ import String exposing (toInt, trim, fromInt)
 --MAIN
 main : Program () Model Msg
 main =
-    Browser.sandbox
+    Browser.element
         { init = init
+        , subscriptions = subscriptions
         , view = view
         , update = update
         }
@@ -27,9 +28,15 @@ type alias Model =
     , selected : Selected
     }
 
-init: Model
-init = 
-    Model Nothing Nothing Email
+init: () -> (Model, Cmd Msg)
+init _ = 
+    ( Model Nothing Nothing Email
+    , Cmd.none)
+
+--SUBSCRIPTIONS
+subscriptions : Model -> Sub Msg
+subscriptions _ = 
+    Sub.none
 
 --UPDATE
 type Msg
@@ -38,20 +45,20 @@ type Msg
     | Select Selected
     | Fill
 
-update : Msg -> Model -> Model
+update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
     case msg of
         ChangeEmail email ->
-            { model | email = Just email }
+            ({ model | email = Just email }, Cmd.none)
 
         ChangePhone phone ->
-            { model | phone = String.toInt phone }
+            ({ model | phone = String.toInt phone }, Cmd.none)
                 
         Select selected ->
-            { model | selected = selected }
+            ({ model | selected = selected }, Cmd.none)
 
         Fill ->
-            model
+            (model, Cmd.none)
 
 --VIEW
 
