@@ -6,6 +6,8 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (onClick)
 import Maybe
 import Result
+import Process
+import Task
 
 
 --MAIN
@@ -34,20 +36,20 @@ init _ =
 --UPDATE
 type Msg = Start
     | UserClickedGetUser
---    | ReceivedUserFromServer
+    | ReceivedUserFromServer (Result String User )
 
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
     case msg of
         Start ->
-            ( {model | name = "start"} , Cmd.none)
+            ( { model | name = "Start! No Request made"} , Cmd.none )
         UserClickedGetUser ->
-            ( {model | name = "click"} , getUser)
---        ReceivedUserFromServer (Ok user) ->
---            ( {}, Cmd.none)
---        ReceivedUserFromServer (Ok Err error) ->
---            ( {} Cmd.none)
+            ( { model | name = "\"Loading\""} , getUser )
+        ReceivedUserFromServer (Ok user) ->
+            ( user, Cmd.none )
+        ReceivedUserFromServer (Err error) ->
+            ( { model | name = "Error! User not found"}, Cmd.none )
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
@@ -65,11 +67,10 @@ view model =
 --GETUSER
 getUser : Cmd Msg
 getUser =
-    Cmd.none
---  Process.sleep 2000
---    |> Task.perform (\_ ->
---      ReceivedUserFromServer (Ok fakeUser)
---    )
+  Process.sleep 2000
+    |> Task.perform (\_ ->
+      ReceivedUserFromServer (Ok fakeUser)
+    )
 
 fakeUser : User
 fakeUser =
