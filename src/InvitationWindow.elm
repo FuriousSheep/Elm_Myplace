@@ -1,11 +1,11 @@
 module InvitationWindow exposing (..)
 
 import Browser
+import Email
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onInput, onClick)
 import Maybe
-import String exposing (toInt, trim, fromInt)
 
 --MAIN
 main : Program () Model Msg
@@ -73,9 +73,9 @@ view model =
         button [] [text "Send"],
         div [] [
             p [] [text "Model = {" ],
-            p [] [text ("email : " ++ ( Maybe.withDefault "empty" model.email)) ],
-            p [] [text ("phone : " ++ ( Maybe.withDefault "empty" model.phone )) ],
-            p [] [text ("selected :" ++ ( showSelected model.selected ))],
+            p [] [text ("email : " ++ Maybe.withDefault "empty" model.email) ],
+            p [] [text ("phone : " ++ Maybe.withDefault "empty" model.phone ) ],
+            p [] [text ("selected :" ++ showSelected model.selected )],
             p [] [text "}"]
         ]
     ]
