@@ -107,3 +107,18 @@ showSelected selected =
             "email"
         Phone ->
             "phone"
+
+--VALIDATION
+
+{-
+validateEmail: Maybe String -> (Bool, String)
+validateEmail = 
+    -- CODE THAT VALIDATES THE EMAIL
+
+validatePhone: Maybe String -> (Bool, String)
+validatePhone = 
+    -- CODE THAT VALIDATES THE PHONE
+
+=> See Regexes
+
+-}
