@@ -137,16 +137,24 @@ matchesRegexExactly : Regex.Regex -> String -> Bool
 matchesRegexExactly regex string =
     Regex.split regex string == ["",""]
     
-    
+matchRegexStringExactly : String -> String -> Bool
+matchRegexStringExactly regex string =
+    matchesRegexExactly (stringToRegex regex) string
 
 --VALIDATION
 
 
 validateEmail: Maybe String -> Bool
 validateEmail string =
+    let
+        regex = ""
+    in
+    
     case string of 
-        Nothing -> False
-        Just _ -> True
+        Nothing -> 
+            False
+        Just _ -> 
+            True --if matchesRegexExactly  
     
     -- CODE THAT VALIDATES THE EMAIL
 
