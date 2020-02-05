@@ -66,11 +66,13 @@ update msg model =
         SendInvitationMethod ->
             case model.selected of
                 Email ->
-                    case model.typedEmail of
-                        Nothing ->
-                            ( model, Cmd.none)
-                        _ ->
+                    let isvalid = validateEmail model.typedEmail 
+                    in
+                    if isvalid then 
                             ({ model | email = model.typedEmail}, Cmd.none)
+                    else
+                            ( model, Cmd.none)
+
                 Phone ->
                     case model.typedPhone of    
                         Nothing ->
@@ -139,11 +141,16 @@ matchesRegexExactly regex string =
 
 --VALIDATION
 
-{-
-validateEmail: Maybe String -> (Bool, String)
-validateEmail = 
+
+validateEmail: Maybe String -> Bool
+validateEmail string =
+    case string of 
+        Nothing -> False
+        Just _ -> True
+    
     -- CODE THAT VALIDATES THE EMAIL
 
+{-
 validatePhone: Maybe String -> (Bool, String)
 validatePhone = 
     -- CODE THAT VALIDATES THE PHONE
