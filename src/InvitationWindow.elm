@@ -64,7 +64,19 @@ update msg model =
             ({ model | selected = selected }, Cmd.none)
 
         SendInvitationMethod ->
-            (model, Cmd.none)
+            case model.selected of
+                Email ->
+                    case model.typedEmail of
+                        Nothing ->
+                            ( model, Cmd.none)
+                        _ ->
+                            ({ model | email = model.typedEmail}, Cmd.none)
+                Phone ->
+                    case model.typedPhone of    
+                        Nothing ->
+                            ( model, Cmd.none)
+                        _ ->
+                            ({ model | phone = model.typedPhone}, Cmd.none)
 
 --VIEW
 
