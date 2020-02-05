@@ -1,7 +1,6 @@
 module InvitationWindow exposing (..)
 
 import Browser
-import Email exposing (Email)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onInput, onClick)
@@ -24,6 +23,8 @@ main =
 type Selected = Phone | Email
 
 type alias Phone = String
+
+type alias Email = String
 
 type alias Model =
     { typedEmail : Maybe String
@@ -48,7 +49,7 @@ type Msg
     = ChangeEmail String
     | ChangePhone String
     | Select Selected
-    | Fill
+    | SendInvitationMethod
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
@@ -62,7 +63,7 @@ update msg model =
         Select selected ->
             ({ model | selected = selected }, Cmd.none)
 
-        Fill ->
+        SendInvitationMethod ->
             (model, Cmd.none)
 
 --VIEW
@@ -75,16 +76,16 @@ view model =
             option [ onClick (Select Phone) ] [ text "Phone" ]
         ],
         shownInput model,
-        button [] [text "Send"],
+        button [onClick SendInvitationMethod] [text "Send"],
         div [] [
             p [] [text "Model = {" ],
-            p [] [text ("email : " ++ Maybe.withDefault "empty" model.typedEmail) ],
-            p [] [text ("phone : " ++ Maybe.withDefault "empty" model.typedPhone ) ],
-            p [] [text ("selected :" ++ showSelected model.selected )],
+            p [] [text ("typed email : " ++ Maybe.withDefault "empty" model.typedEmail) ],
+            p [] [text ("typed phone : " ++ Maybe.withDefault "empty" model.typedPhone ) ],
+            p [] [text ("selected : " ++ showSelected model.selected )],
+            p [] [text ("email : " ++ Maybe.withDefault "empty" model.email )],
+            p [] [text ("phone : " ++ Maybe.withDefault "empty" model.phone )],
             p [] [text "}"]
-        ],
-        div [] [text apollo11]
-
+        ]
     ]
 
 shownInput: Model -> Html Msg
@@ -98,7 +99,7 @@ shownInput model =
                 )] []
         Phone ->
             input [onInput ChangePhone
-                , value (model.phone
+                , value (model.typedPhone
                     |> Maybe.withDefault ""
                 )] []
                 
@@ -112,22 +113,6 @@ showSelected selected =
             "phone"
 
 --REGEX
-{-
-pattern : String
-pattern = "[^\\s@]+@[^\\s@]+\.[^\\s@]+"
-
-maybeRegex : Maybe Regex.Regex
-maybeRegex = Regex.fromString pattern
-
-regex : Regex.Regex
-regex = Maybe.withDefault Regex.never maybeRegex
-
--}
-apollo11 : String
-apollo11 = """On July 16, 1969, the massive Saturn V rocket\n
-    lifted off from NASA's Kennedy Space Center at 09:32 a.m.\n
-    EDT. Four days later, on July 20, Neil Armstrong and Buzz \n
-    Aldrin landed on the Moon. """
 
 stringToRegex : String -> Regex.Regex
 stringToRegex string =
