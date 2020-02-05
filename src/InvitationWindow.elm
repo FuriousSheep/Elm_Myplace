@@ -6,6 +6,7 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onInput, onClick)
 import Maybe
+import Regex
 
 --MAIN
 main : Program () Model Msg
@@ -81,7 +82,9 @@ view model =
             p [] [text ("phone : " ++ Maybe.withDefault "empty" model.typedPhone ) ],
             p [] [text ("selected :" ++ showSelected model.selected )],
             p [] [text "}"]
-        ]
+        ],
+        div [] [text apollo11]
+
     ]
 
 shownInput: Model -> Html Msg
@@ -107,6 +110,35 @@ showSelected selected =
             "email"
         Phone ->
             "phone"
+
+--REGEX
+{-
+pattern : String
+pattern = "[^\\s@]+@[^\\s@]+\.[^\\s@]+"
+
+maybeRegex : Maybe Regex.Regex
+maybeRegex = Regex.fromString pattern
+
+regex : Regex.Regex
+regex = Maybe.withDefault Regex.never maybeRegex
+
+-}
+apollo11 : String
+apollo11 = """On July 16, 1969, the massive Saturn V rocket\n
+    lifted off from NASA's Kennedy Space Center at 09:32 a.m.\n
+    EDT. Four days later, on July 20, Neil Armstrong and Buzz \n
+    Aldrin landed on the Moon. """
+
+stringToRegex : String -> Regex.Regex
+stringToRegex string =
+    Regex.fromString string |> Maybe.withDefault Regex.never 
+
+
+matchesRegexExactly : Regex.Regex -> String -> Bool
+matchesRegexExactly regex string =
+    Regex.split regex string == ["",""]
+    
+    
 
 --VALIDATION
 
