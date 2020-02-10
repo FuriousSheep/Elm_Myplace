@@ -107,16 +107,11 @@ update msg model =
             else
                 ( { model | formMessage = Just "Contact Info not Saved!" } , Cmd.none)
 
-
         SentValidContact (Err error) ->
             case error of
                 _ ->
                     ( { model | formMessage = Just "Error in sending Contact Info" } , Cmd.none)
             
-
-
-
-
 
 --VIEW
 view : Model -> Html Msg
@@ -205,11 +200,11 @@ sendValidContact =
     )
     {-
     Http.request
-        { method = "PUT"
+        { method = "POST"
         , headers = []
         , url = ""
-        , body = ""
-        , expect = Http.expectString GotText
+        , body = model.formMessage
+        , expect = Http.expectWhatever SentValidContact
         , timeout = Nothing
         , tracker = Nothing
         }
